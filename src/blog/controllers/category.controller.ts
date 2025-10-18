@@ -5,6 +5,7 @@ import { BlogQueryDto } from '../dto/blog-query.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { CategoryService } from '../services/category.service';
 import { CategoryDto } from '../dto/category.dto';
+import { CategoryQueryDto } from '../dto/category-query.dto';
 
 @ApiTags('Blog Category')
 @Controller('categorys')
@@ -14,7 +15,7 @@ export class CategoryController {
     constructor(private readonly categoryService: CategoryService) { }
 
     @Get()
-    allcategory(@Query() queryparams: CategoryDto) {
+    allcategory(@Query() queryparams: CategoryQueryDto) {
         return this.categoryService.getAllCategory(queryparams);
     }
 

@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException, Query } from '@nestjs/common';
+import { Injectable, NotFoundException, Query, BadRequestException } from '@nestjs/common';
 import { BlogDto } from '../dto/blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog } from '../schemas/blog.schema';
+import { Category } from '../schemas/category.schema';
 import { Model } from 'mongoose';
 import { BlogQueryDto } from '../dto/blog-query.dto';
 import { sortFunction } from 'src/common/utils/sort_utils';
@@ -14,7 +15,9 @@ export class BlogService {
     // ?استفاده از اسکیمای بلاگ برای ارتباط با دیتابیس
     constructor(
         @InjectModel(Blog.name)
-        private readonly blogModel: Model<Blog>
+        private readonly blogModel: Model<Blog>,
+        @InjectModel(Category.name)
+        private readonly categoryModel: Model<Category>
     ) { }
 
 
@@ -56,6 +59,10 @@ export class BlogService {
 
     // ? ایجاد بلاگ جدید
     async createBlog(body: BlogDto) {
+        // بررسی وجود category
+        const categoryExists = await this.categoryModel.findById(body.category).exec();
+        if (!categoryExists) throw new BadRequestException(`Category with id ${body.category} not found`);
+
         const newBlog = new this.blogModel(body);
         await newBlog.save();
         return newBlog;
@@ -63,6 +70,12 @@ export class BlogService {
 
     // ? بروزرسانی بلاگ بر اساس آیدی
     async updateBlog(id: string, body: BlogDto) {
+        // بررسی وجود category اگر در body ارسال شده باشد
+        if (body.category) {
+            const categoryExists = await this.categoryModel.findById(body.category).exec();
+            if (!categoryExists) throw new BadRequestException(`Category with id ${body.category} not found`);
+        }
+
         const updatedBlog = await this.blogModel.findByIdAndUpdate(id, body, { new: true });
         if (!updatedBlog) throw new NotFoundException(`Blog with id ${id} not found`);
         return updatedBlog;

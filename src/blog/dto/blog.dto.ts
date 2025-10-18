@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsMongoId } from 'class-validator';
 
 export class BlogDto {
     @IsString()
@@ -10,6 +10,7 @@ export class BlogDto {
     content: string;
 
     @IsString()
+    @IsMongoId()
     @IsNotEmpty()
     category: string;
 }

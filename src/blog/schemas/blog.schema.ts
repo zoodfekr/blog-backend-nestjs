@@ -1,7 +1,6 @@
 // blog.schema.ts
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import mongoose, { Document, Types } from "mongoose";
-import { CategoryDto } from "../dto/category.dto";
 import { Category } from "./category.schema";
 
 @Schema({ timestamps: true })
@@ -14,10 +13,10 @@ export class Blog extends Document {
 
     @Prop({
         type: Types.ObjectId,
-        ref: CategoryDto.name,
+        ref: Category.name,
         required: true
     })
-    blogCategory: Category;
+    category: string;
 }
 
 export const BlogSchema = SchemaFactory.createForClass(Blog);

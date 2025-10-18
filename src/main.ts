@@ -19,13 +19,15 @@ async function bootstrap() {
 
   //? Swagger setup
   const config = new DocumentBuilder()
-    .setTitle('blog-backend-nestjs')
-    .setDescription('API description');
+    .setTitle('Blog API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addServer('http://localhost:3000')
+    .build();
 
   //? .Add more Swagger configuration as needed
-  const document = SwaggerModule.createDocument(app, config.build());
-
-  SwaggerModule.setup('documantaion', app, document);
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('documentation', app, document);
 
   //? Start the application
   await app.listen(process.env.PORT ?? 3000);

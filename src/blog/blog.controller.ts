@@ -1,22 +1,23 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { BlogDto } from './dto/blog.dto';
 import { BlogService } from './blog.service';
+import { BlogQueryDto } from './dto/blog-query.dto';
 
-@Controller('blog')
+@Controller('blogs')
 export class BlogController {
 
 
     constructor(private readonly blogService: BlogService) { }
 
     @Get()
-    allblog() {
-        return this.blogService.getAllBlogs();
+    allblog(@Query() queryparams: BlogQueryDto) {
+        return this.blogService.getAllBlogs(queryparams);
     }
 
 
     @Get(':id')
     blogByid(@Param('id') id: string) {
-        return this.blogService.getBlogById(+id);
+        return this.blogService.getBlogById(id);
     }
 
     @Post()
@@ -26,13 +27,13 @@ export class BlogController {
 
     @Put(':id')
     updatepost(@Param('id') id: string, @Body() body: BlogDto) {
-        return this.blogService.updateBlog(+id, body);
+        return this.blogService.updateBlog(id, body);
     }
 
 
     @Delete(':id')
     deletepost(@Param('id') id: string) {
-        return this.blogService.deleteBlog(+id);
+        return this.blogService.deleteBlog(id);
     }
 
 }

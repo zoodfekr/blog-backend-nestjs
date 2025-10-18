@@ -1,4 +1,4 @@
-import { sortEnum } from "common/dtos/general.query.dto";
+import { sortEnum } from "src/common/dtos/general.query.dto";
 
 export const sortFunction = (sort: sortEnum) => {
 

@@ -1,24 +1,22 @@
 import { Injectable, NotFoundException, Query } from '@nestjs/common';
-import { BlogDto } from './dto/blog.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Blog } from './schemas/blog.schema';
 import { Model } from 'mongoose';
-import { BlogQueryDto } from './dto/blog-query.dto';
-import { sortFunction } from 'common/utils/sort_utils';
-import { sortEnum } from 'common/dtos/general.query.dto';
+import { sortFunction } from 'src/common/utils/sort_utils';
+import { sortEnum } from 'src/common/dtos/general.query.dto';
+import { Category } from '../schemas/category.schema';
+import { CategoryQueryDto } from '../dto/category-query.dto';
+import { CategoryDto } from '../dto/category.dto';
 
 @Injectable()
-export class BlogService {
+export class CategoryService {
 
     // ?استفاده از اسکیمای بلاگ برای ارتباط با دیتابیس
     constructor(
-        @InjectModel(Blog.name)
-        private readonly blogModel: Model<Blog>
-    ) { }
+        @InjectModel(Category.name) private readonly categoryModel: Model<Category>) { }
 
 
-    // ? دریافت همه بلاگ‌ها با پارامترهای کوئری
-    async getAllBlogs(queryparams: BlogQueryDto) {
+    // ? دریافت همه دسته بندی ها  با پارامترهای کوئری
+    async getAllCategory(queryparams: CategoryQueryDto, select = { __v: 0 }) {
 
         const { page = 1, limit = 10, title, sort = sortEnum.CreatedAt } = queryparams;
 
@@ -28,14 +26,15 @@ export class BlogService {
 
         const sortOption = sortFunction(sort);
 
-        let blog = await this.blogModel
+        let blog = await this.categoryModel
             .find(queryObject)
+            .select(select)
             .sort(sortOption)
             .skip(page - 1)
             .limit(limit)
             .exec();
 
-        let blog_len = await this.blogModel.countDocuments(queryObject); // تنظیم طول آرایه به مقدار limit
+        let blog_len = await this.categoryModel.countDocuments(queryObject); // تنظیم طول آرایه به مقدار limit
 
         return {
             length: +blog_len,
@@ -48,20 +47,20 @@ export class BlogService {
 
 
     // ? دریافت بلاگ بر اساس آیدی
-    async getBlogById(id: string) {
-        return await this.blogModel.findById(id).exec();
+    async getCategoryById(id: string, select = { __v: 0 }) {
+        return await this.categoryModel.findById(id).select(select).exec();
     }
 
     // ? ایجاد بلاگ جدید
-    async createBlog(body: BlogDto) {
-        const newBlog = new this.blogModel(body);
+    async createCategory(body: CategoryDto) {
+        const newBlog = new this.categoryModel(body);
         await newBlog.save();
         return newBlog;
     }
 
     // ? بروزرسانی بلاگ بر اساس آیدی
-    async updateBlog(id: string, body: BlogDto) {
-        const updatedBlog = await this.blogModel.findByIdAndUpdate(
+    async updateCategory(id: string, body: CategoryDto) {
+        const updatedBlog = await this.categoryModel.findByIdAndUpdate(
             id,
             { title: body.title, content: body.content },
             { new: true } // برمی‌گردونه نسخه‌ی جدید بعد از آپدیت
@@ -74,8 +73,8 @@ export class BlogService {
     }
 
     // ? حذف بلاگ بر اساس آیدی
-    async deleteBlog(id: string) {
-        const blog = await this.blogModel.findByIdAndDelete(id);
+    async deleteCategory(id: string) {
+        const blog = await this.categoryModel.findByIdAndDelete(id);
         if (!blog) {
             throw new NotFoundException(`Blog with id ${id} not found`);
         }

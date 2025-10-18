@@ -3,4 +3,4 @@ import { GeneralQueryDto } from "src/common/dtos/general.query.dto";
 
 
 
-export class BlogQueryDto extends GeneralQueryDto { }
+export class CategoryQueryDto extends GeneralQueryDto { }

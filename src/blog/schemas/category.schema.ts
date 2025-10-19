@@ -9,6 +9,9 @@ export class Category extends Document {
 
     @Prop()
     content: string;
+
+    @Prop()
+    image: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);

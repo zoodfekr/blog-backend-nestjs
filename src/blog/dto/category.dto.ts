@@ -7,6 +7,10 @@ export class CategoryDto {
 
     @IsString()
     @IsNotEmpty()
+    image: string;
+
+    @IsString()
+    @IsNotEmpty()
     content: string;
 
 }

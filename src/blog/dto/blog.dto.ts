@@ -10,6 +10,10 @@ export class BlogDto {
     content: string;
 
     @IsString()
+    @IsNotEmpty()
+    image: string;
+
+    @IsString()
     @IsMongoId()
     @IsNotEmpty()
     category: string;

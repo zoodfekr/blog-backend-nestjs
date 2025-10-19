@@ -1,0 +1,24 @@
+// blog.schema.ts
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import mongoose, { Document, Types } from "mongoose";
+
+
+export enum LogType {
+    Error = 'error',
+    POST = 'POST',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+    PATCH = 'PATCH',
+}
+
+
+@Schema({ timestamps: true })
+export class Log extends Document {
+    @Prop()
+    type: LogType;
+    @Prop()
+    content: string;
+
+}
+
+export const LogSchema = SchemaFactory.createForClass(Log);

@@ -25,4 +25,4 @@ import { Category } from './schemas/category.schema';
     controllers: [BlogController, CategoryController],
     providers: [BlogService, CategoryService],
 })
-export class BlogModule { }
+export class BlogModule {}

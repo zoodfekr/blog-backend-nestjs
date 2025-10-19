@@ -13,7 +13,8 @@ export class CategoryService {
 
     // ?استفاده از اسکیمای بلاگ برای ارتباط با دیتابیس
     constructor(
-        @InjectModel(Category.name) private readonly categoryModel: Model<Category>) { }
+        @InjectModel(Category.name) private readonly categoryModel: Model<Category>
+    ) { }
 
 
     // ? دریافت همه دسته بندی ها  با پارامترهای کوئری

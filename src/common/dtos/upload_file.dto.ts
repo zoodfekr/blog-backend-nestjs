@@ -17,7 +17,7 @@ export class UplpoadFileDto {
     folder: folderEnum;
 
     @IsOptional()
-    heigth?: number;
+    height?: number;
 
     @IsOptional()
     width?: number;

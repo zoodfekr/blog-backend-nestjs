@@ -3,6 +3,8 @@ import { UplpoadFileDto } from "../dtos/upload_file.dto";
 import sharp from 'sharp';
 import path from 'path';
 import { UplpoadFilesDto } from '../dtos/upload_files.dto';
+import fs from 'fs';
+
 
 export const saveImage = async (
     file: Express.Multer.File,
@@ -15,17 +17,21 @@ export const saveImage = async (
 
     mkdirp.sync(destination);
 
-
     await sharp(file.buffer)
-        .resize({ 
-            width: body.width && body.width > 0 ? body.width : 200, 
-            height: body.height && body.height > 0 ? body.height : 200 
+        .resize({
+            width: body.width && body.width > 0 ? body.width : 200,
+            height: body.height && body.height > 0 ? body.height : 200
         })
         .webp()
         .toFile(path.join(destination, fileName));
 
     return `${safeFolder}/${fileName}`;
 };
+
+
+
+
+
 
 
 export const saveImages = async (
@@ -46,9 +52,9 @@ export const saveImages = async (
         const outputPath = path.join(destination, fileName);
 
         await sharp(file.buffer)
-            .resize({ 
-                width: body.width && body.width > 0 ? body.width : 200, 
-                height: body.height && body.height > 0 ? body.height : 200 
+            .resize({
+                width: body.width && body.width > 0 ? body.width : 200,
+                height: body.height && body.height > 0 ? body.height : 200
             })
             .webp()
             .toFile(outputPath);
@@ -58,5 +64,20 @@ export const saveImages = async (
 
     return fileNames;
 };
+
+
+
+
+
+
+export const deleteImage = async (fileName: string) => {
+    const imagePath = path.join(process.cwd(), 'files', fileName);
+    try {
+        await fs.promises.unlink(imagePath);
+        return { success: true, message: 'File deleted successfully' };
+    } catch (error) {
+        return { success: false, message: 'File not found or could not be deleted' };
+    }
+}
 // npm i sharp
 // npm i mkdirp

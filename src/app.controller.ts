@@ -1,11 +1,13 @@
-import { Controller, Get, Post, UseInterceptors, UploadedFile, BadRequestException, Body, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, UseInterceptors, UploadedFile, BadRequestException, Body, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, UploadedFiles, Delete, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { ApiConsumes, ApiBody, ApiResponse } from '@nestjs/swagger';
+import { ApiConsumes, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { UplpoadFileDto } from './common/dtos/upload_file.dto';
-import { saveImage, saveImages } from './common/utils/file-utils';
+import { deleteImage, saveImage, saveImages } from './common/utils/file-utils';
 import { UplpoadFilesDto } from './common/dtos/upload_files.dto';
+import { DeleteFileDto } from './common/dtos/delete_file.dto';
 
+@ApiTags('common')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
@@ -65,6 +67,16 @@ export class AppController {
     return saveImages(files, body);
   }
 
+
+
+  @Delete('delete-file')
+  @ApiResponse({ status: 200, description: 'File deleted successfully' })
+  @ApiResponse({ status: 404, description: 'File not found' })
+  async deleteFile(@Query() queryparams: DeleteFileDto) {
+    console.log('queryparams>>', queryparams);
+    const result = await deleteImage(queryparams.name);
+    return result;
+  }
 
 }
 

@@ -6,6 +6,7 @@ import { sortEnum } from 'src/common/dtos/general.query.dto';
 import { Category } from '../schemas/category.schema';
 import { CategoryQueryDto } from '../dto/category-query.dto';
 import { CategoryDto } from '../dto/category.dto';
+import { deleteImage } from 'src/common/utils/file-utils';
 
 @Injectable()
 export class CategoryService {
@@ -53,9 +54,9 @@ export class CategoryService {
 
     // ? ایجاد بلاگ جدید
     async createCategory(body: CategoryDto) {
-        const newBlog = new this.categoryModel(body);
-        await newBlog.save();
-        return newBlog;
+        const newCategory = new this.categoryModel(body);
+        await newCategory.save();
+        return newCategory;
     }
 
     // ? بروزرسانی بلاگ بر اساس آیدی
@@ -74,10 +75,9 @@ export class CategoryService {
 
     // ? حذف بلاگ بر اساس آیدی
     async deleteCategory(id: string) {
-        const blog = await this.categoryModel.findByIdAndDelete(id);
-        if (!blog) {
-            throw new NotFoundException(`Blog with id ${id} not found`);
-        }
-        return blog;
+        const category = await this.categoryModel.findByIdAndDelete(id);
+        if (!category) throw new NotFoundException(`category with id ${id} not found`);
+        await deleteImage(category.image)
+        return category;
     }
 }

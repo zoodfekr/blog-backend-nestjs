@@ -7,6 +7,7 @@ import { Model } from 'mongoose';
 import { BlogQueryDto } from '../dto/blog-query.dto';
 import { sortFunction } from 'src/common/utils/sort_utils';
 import { sortEnum } from 'src/common/dtos/general.query.dto';
+import { deleteImage } from 'src/common/utils/file-utils';
 
 
 @Injectable()
@@ -85,6 +86,7 @@ export class BlogService {
     async deleteBlog(id: string) {
         const blog = await this.blogModel.findByIdAndDelete(id);
         if (!blog) throw new NotFoundException(`Blog with id ${id} not found`);
+        await deleteImage(blog.image)
         return blog;
     }
 }

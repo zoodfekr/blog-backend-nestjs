@@ -5,6 +5,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ApiKeyGuard } from './common/guards/api_key.guard';
+import { LogInterceptor } from './common/interceptors/log.interceptor';
+import { AppService } from './app.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -24,7 +26,10 @@ async function bootstrap() {
   //? Serve static files from files directory
   app.useStaticAssets(join(__dirname, '..', 'files'), { prefix: '/files/' });
 
-  app.useGlobalGuards(new ApiKeyGuard());
+  // ?استفاده از guard به صورت گلوبال
+  // app.useGlobalGuards(new ApiKeyGuard());
+  // ? استفاده از interceptor به صورت گلوبال
+  app.useGlobalInterceptors(new LogInterceptor(app.get(AppService)))
 
   //? Swagger setup
   const config = new DocumentBuilder()
@@ -41,4 +46,4 @@ async function bootstrap() {
   //? Start the application
   await app.listen(process.env.PORT ?? 3000);
 }
-void bootstrap();
+bootstrap();

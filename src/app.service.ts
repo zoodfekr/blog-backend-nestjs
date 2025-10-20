@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Log } from './common/schema/blog.schema';
 import { Model } from 'mongoose';
-import { LogDto } from './blog/dto/log.dto';
+import { LogDto } from './common/dtos/log.dto';
 
 @Injectable()
 export class AppService {

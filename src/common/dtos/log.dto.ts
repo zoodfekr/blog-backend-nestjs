@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
-import { LogType } from 'src/common/schema/blog.schema';
+import { LogType } from '../schema/blog.schema';
 
 export class LogDto {
 
@@ -11,5 +11,9 @@ export class LogDto {
     @IsNotEmpty()
     @IsString()
     content: string;
+
+    @IsNotEmpty()
+    @IsString()
+    url: string;
 
 }

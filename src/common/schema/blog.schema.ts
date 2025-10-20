@@ -9,6 +9,7 @@ export enum LogType {
     PUT = 'PUT',
     DELETE = 'DELETE',
     PATCH = 'PATCH',
+    GET = "GET"
 }
 
 
@@ -16,6 +17,8 @@ export enum LogType {
 export class Log extends Document {
     @Prop()
     type: LogType;
+    @Prop()
+    url: string;
     @Prop()
     content: string;
 

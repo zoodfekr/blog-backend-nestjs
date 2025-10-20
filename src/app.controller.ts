@@ -10,8 +10,6 @@ import { DeleteFileDto } from './common/dtos/delete_file.dto';
 @ApiTags('common')
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
-
 
   @Post('upload-file')
   @ApiConsumes('multipart/form-data')

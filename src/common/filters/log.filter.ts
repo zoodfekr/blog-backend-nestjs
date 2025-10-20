@@ -29,7 +29,8 @@ export class LogFilter<T extends HttpException> implements ExceptionFilter {
     // ?ذخیره در دیتابیس با استفاده از سرویس  مورد نظر
     await this.appService.log({
       type: LogType.Error,
-      content: JSON.stringify(exception.getResponse())
+      content: JSON.stringify(exception.getResponse()),
+      url : request.url
     })
 
   }

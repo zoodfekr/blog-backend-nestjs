@@ -10,9 +10,7 @@ export class LogFilter<T extends HttpException> implements ExceptionFilter {
   // *وارد کردن سرویس برای استفاده 
   constructor(private readonly appService: AppService) { }
 
-
   async catch(exception: T, host: ArgumentsHost) {
-
 
     // ? گرفتن پاسخ و درخواست
     const response = host.switchToHttp().getResponse<Response>()

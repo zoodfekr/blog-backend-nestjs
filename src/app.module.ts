@@ -19,7 +19,7 @@ const extraProviders = [
 @Module({
   imports: [
     BlogModule,
-    MongooseModule.forRoot('mongodb://localhost/nest-app'),
+    MongooseModule.forRoot(process.env.DB_url || '' ),
     MongooseModule.forFeature([
       {
         name: Log.name,

@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
+import { ApiKeyGuard } from './common/guards/api_key.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -22,6 +23,8 @@ async function bootstrap() {
 
   //? Serve static files from files directory
   app.useStaticAssets(join(__dirname, '..', 'files'), { prefix: '/files/' });
+
+  app.useGlobalGuards(new ApiKeyGuard());
 
   //? Swagger setup
   const config = new DocumentBuilder()

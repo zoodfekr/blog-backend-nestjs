@@ -1,37 +1,34 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { AppService } from 'src/app.service';
 
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from '@nestjs/common';
+import { Observable, of, from } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
+import { AppService } from 'src/app.service';
 
 @Injectable()
 export class LogInterceptor implements NestInterceptor {
-
   constructor(private readonly appService: AppService) { }
 
-
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const request = context.switchToHttp().getRequest();
 
-    const request = context.switchToHttp().getRequest()
-    const response = context.switchToHttp().getResponse()
-
-    console.log('📥 Request Info:');
-    console.log('Method:', request.method);
-    console.log('URL:', request.url);
-    // console.log('Headers:', request.headers);
-    // console.log('Body:', request.body);
-
-    console.log('interceprtor before');
+    console.log('📥 Request Info:', request.method, request.url);
 
     return next.handle().pipe(
-      tap(async (res) => {
-        if (request.method != 'GET') {
-          await this.appService.log({
+      tap((res) => {
+        if (request.method !== 'GET') {
+          // لاگ async ولی بدون block کردن جریان
+          from(this.appService.log({
             type: request.method,
             content: JSON.stringify(res),
-            url: request.url
-          })
+            url: request.url,
+          })).subscribe({
+            error: (err) => console.error('Log Error:', err),
+          });
         }
+      }),
+      catchError((err) => {
+        console.error('Interceptor caught error:', err);
+        throw err; // خطا را به بالا پرتاب می‌کند
       }),
     );
   }

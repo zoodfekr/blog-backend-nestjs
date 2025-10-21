@@ -6,6 +6,7 @@ import { UplpoadFileDto } from './common/dtos/upload_file.dto';
 import { deleteImage, saveImage, saveImages } from './common/utils/file-utils';
 import { UplpoadFilesDto } from './common/dtos/upload_files.dto';
 import { DeleteFileDto } from './common/dtos/delete_file.dto';
+import { ImagePipe } from './common/pipes/image.pipe';
 
 @ApiTags('common')
 @Controller()
@@ -47,18 +48,7 @@ export class AppController {
   })
   @UseInterceptors(FilesInterceptor('files', 10)) // Allow up to 10 files
   uploadFiles(
-    @UploadedFiles(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({
-            maxSize: 20000000,
-          }),
-          new FileTypeValidator({
-            fileType: /(image\/jpeg|image\/png|image\/jpg|image\/webp)/,
-          }),
-        ],
-      }),
-    )
+    @UploadedFiles(ImagePipe)
     files: Array<Express.Multer.File>,
     @Body() body: UplpoadFilesDto,
   ) {

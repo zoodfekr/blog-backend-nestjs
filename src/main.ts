@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ApiKeyGuard } from './common/guards/api_key.guard';
 import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { AppService } from './app.service';
+import { IdPipe } from './common/pipes/id.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -30,6 +31,8 @@ async function bootstrap() {
   // app.useGlobalGuards(new ApiKeyGuard());
   // ? استفاده از interceptor به صورت گلوبال
   app.useGlobalInterceptors(new LogInterceptor(app.get(AppService)))
+
+  app.useGlobalPipes(new IdPipe())
 
   //? Swagger setup
   const config = new DocumentBuilder()

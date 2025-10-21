@@ -1,38 +1,41 @@
-import { ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { AppService } from 'src/app.service';
 import { LogType } from '../schema/blog.schema';
-import { json } from 'stream/consumers';
 
 @Catch()
-export class LogFilter<T extends HttpException> implements ExceptionFilter {
-
-  // *وارد کردن سرویس برای استفاده 
+export class LogFilter implements ExceptionFilter {
   constructor(private readonly appService: AppService) { }
 
-  async catch(exception: T, host: ArgumentsHost) {
+  async catch(exception: unknown, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
 
-    // ? گرفتن پاسخ و درخواست
-    const response = host.switchToHttp().getResponse<Response>()
-    const request = host.switchToHttp().getRequest<Request>()
+    // بررسی نوع خطا
+    const status =
+      exception instanceof HttpException
+        ? exception.getStatus()
+        : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    //? گرفتن کد خطا
-    const status = exception.getStatus();
+    const message =
+      exception instanceof HttpException
+        ? exception.getResponse()
+        : { message: (exception as any)?.message || 'Internal server error' };
 
-    //? برای ارسال پاسخ به کاربر
-    if (status.toString() === '404') {
-      response.status(status).send({ statusCode: status, message: 'Resource not found' });
-    } else {
-      response.send(exception.getResponse());
-    }
+    // ارسال پاسخ به کاربر
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message,
+    });
 
-    // ?ذخیره در دیتابیس با استفاده از سرویس  مورد نظر
+    // ذخیره لاگ
     await this.appService.log({
       type: LogType.Error,
-      content: JSON.stringify(exception.getResponse()),
-      url : request.url
-    })
-
+      content: JSON.stringify(message),
+      url: request.url,
+    });
   }
-
 }

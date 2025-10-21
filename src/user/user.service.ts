@@ -6,6 +6,7 @@ import { UserQueryDto } from './dto/user-query.dto';
 import { sortFunction } from 'src/common/utils/sort_utils';
 import { sortEnum } from 'src/common/dtos/general.query.dto';
 import { UserDto } from './dto/user.dto';
+import { updateUserDto } from './dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -53,7 +54,7 @@ export class UserService {
         return newUser;
     }
 
-    async update(id: string, body: UserDto) {
+    async update(id: string, body: updateUserDto) {
         return await this.userModel.findByIdAndUpdate(id, body, { new: true });
     }
 

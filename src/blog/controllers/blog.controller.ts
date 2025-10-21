@@ -3,6 +3,7 @@ import { BlogDto } from '../dto/blog.dto';
 import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dto/blog-query.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { UpdateBlogDto } from '../dto/update-blog.dto';
 // import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
 
 @ApiTags('blogs')
@@ -29,7 +30,7 @@ export class BlogController {
     }
 
     @Put(':id')
-    updatepost(@Param('id') id: string, @Body() body: BlogDto) {
+    updatepost(@Param('id') id: string, @Body() body: UpdateBlogDto) {
         return this.blogService.updateBlog(id, body);
     }
 

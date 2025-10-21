@@ -7,6 +7,7 @@ import { Category } from '../schemas/category.schema';
 import { CategoryQueryDto } from '../dto/category-query.dto';
 import { CategoryDto } from '../dto/category.dto';
 import { deleteImage } from 'src/common/utils/file-utils';
+import { UpdateCategoryDto } from '../dto/update-category.dto';
 
 @Injectable()
 export class CategoryService {
@@ -61,7 +62,7 @@ export class CategoryService {
     }
 
     // ? بروزرسانی بلاگ بر اساس آیدی
-    async updateCategory(id: string, body: CategoryDto) {
+    async updateCategory(id: string, body: UpdateCategoryDto) {
         const updatedBlog = await this.categoryModel.findByIdAndUpdate(
             id,
             { title: body.title, content: body.content },

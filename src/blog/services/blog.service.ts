@@ -8,6 +8,7 @@ import { BlogQueryDto } from '../dto/blog-query.dto';
 import { sortFunction } from 'src/common/utils/sort_utils';
 import { sortEnum } from 'src/common/dtos/general.query.dto';
 import { deleteImage } from 'src/common/utils/file-utils';
+import { UpdateBlogDto } from '../dto/update-blog.dto';
 
 
 @Injectable()
@@ -70,7 +71,7 @@ export class BlogService {
     }
 
     // ? بروزرسانی بلاگ بر اساس آیدی
-    async updateBlog(id: string, body: BlogDto) {
+    async updateBlog(id: string, body: UpdateBlogDto) {
         // بررسی وجود category اگر در body ارسال شده باشد
         if (body.category) {
             const categoryExists = await this.categoryModel.findById(body.category).exec();

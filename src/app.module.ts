@@ -12,6 +12,7 @@ import { Log, LogSchema } from './common/schema/blog.schema';
 import { ConfigModule } from '@nestjs/config';
 import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { TimeMiddleware } from './common/middlewares/time.middleware';
+import { UserModule } from './user/user.module';
 
 
 const extraProviders = [
@@ -33,6 +34,7 @@ const extraProviders = [
         schema: LogSchema
       }
     ]),
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, ...extraProviders],

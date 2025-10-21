@@ -14,6 +14,9 @@ export const sortFunction = (sort: sortEnum) => {
         case sortEnum.UpdatedAt:
             sortOption.updatedAt = 1;
             break;
+        case sortEnum.LastName:
+            sortOption.lastname = 1;
+            break;
         default:
             sortOption.createdAt = -1; // مرتب‌سازی بر اساس تاریخ ایجاد به صورت نزولی
     }

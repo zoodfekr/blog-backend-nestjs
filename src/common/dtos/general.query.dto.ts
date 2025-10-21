@@ -3,7 +3,8 @@ import { IsEnum, IsOptional, IsString } from "class-validator";
 export enum sortEnum {
     Title = 'title',
     CreatedAt = 'createdAt',
-    UpdatedAt = 'updatedAt'
+    UpdatedAt = 'updatedAt',
+    LastName = 'lastName'
 }
 
 export class GeneralQueryDto {

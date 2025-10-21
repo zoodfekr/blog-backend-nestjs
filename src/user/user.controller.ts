@@ -3,6 +3,9 @@ import { UserService } from './user.service';
 import { UserDto } from './dto/user.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { UserQueryDto } from './dto/user-query.dto';
+import { FarsiPipe } from 'src/common/pipes/farsi.pipe';
+import { MobilePipe } from 'src/common/pipes/mobile.pipe';
+import { PasswordPipe } from 'src/common/pipes/password.pipe';
 
 @ApiTags('User')
 @Controller('user')
@@ -22,7 +25,7 @@ export class UserController {
     }
 
     @Post()
-    createpost(@Body() body: UserDto) {
+    createpost(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
         return this.userService.create(body);
     }
 

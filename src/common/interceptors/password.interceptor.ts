@@ -5,6 +5,7 @@ import { map, Observable } from 'rxjs';
 export class PasswordInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
+
       map((response) => {
 
         // تابع کمکی برای حذف password از هر آبجکت یا آرایه

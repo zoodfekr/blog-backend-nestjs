@@ -1,12 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { User } from './schema/user.schema';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { UserQueryDto } from './dto/user-query.dto';
 import { sortFunction } from 'src/common/utils/sort_utils';
 import { sortEnum } from 'src/common/dtos/general.query.dto';
-import { UserDto } from './dto/user.dto';
-import { updateUserDto } from './dto/user-update.dto';
+import { signInDto } from '../dto/sign-in.dto';
+import bcrypt from 'bcrypt'
+import { User } from '../schema/user.schema';
+import { UserQueryDto } from '../dto/user-query.dto';
+import { UserDto } from '../dto/user.dto';
+import { updateUserDto } from '../dto/user-update.dto';
 
 @Injectable()
 export class UserService {
@@ -76,5 +78,40 @@ export class UserService {
 
 
 
+    // ?  یافتن کاربر با نام کاربری
+    findByUserName = async (username: string) => {
+        const user = await this.userModel.findOne({ userName: username })
+        if (user) return user
+        throw new NotFoundException()
+    }
+
+
+    // ? ورود کاربر
+    async signin(body: signInDto) {
+
+        const { userName, password } = body;
+
+        if (!userName || !password) throw new NotFoundException('نام کاربری و رمز عبور الزامی است');
+
+        const user = await this.findByUserName(userName)
+
+        if (!user) throw new NotFoundException('نام کاربری یا رمز عبور اشتباه است');
+
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+
+        if (!isPasswordCorrect) throw new UnauthorizedException('نام کاربری یا رمز عبور اشتباه است');
+
+        console.log('ورود موفق', user.userName);
+
+        return {
+            message: 'ورود موفق',
+            user: {
+                userName: user.userName,
+                firstName: user.firstName,
+                lastName: user.lastName,
+            },
+        };
+
+    }
 
 }

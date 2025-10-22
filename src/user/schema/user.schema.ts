@@ -5,6 +5,13 @@ import mongoose, { Document, Types } from "mongoose";
 @Schema({ timestamps: true })
 export class User extends Document {
 
+    @Prop({
+        unique: true,
+        type: String,
+        required: true,
+    })
+    userName: string;
+
     @Prop()
     firstName: string;
 

@@ -5,29 +5,35 @@ import { map, Observable } from 'rxjs';
 export class PasswordInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
-
       map((response) => {
 
-        // تابع کمکی برای حذف password از هر آبجکت یا آرایه
-        const removePassword = (data: any): any => {
+        const extractDoc = (data: any): any => {
           if (!data) return data;
 
-          // اگر آرایه است، به ازای هر آیتم حذف می‌کنیم
+          // اگر آرایه است، همه‌ی اعضا را بررسی کن
           if (Array.isArray(data)) {
-            return data.map(item => removePassword(item));
+            return data.map(item => extractDoc(item));
           }
 
-          // اگر آبجکت است، password را حذف می‌کنیم
-          if (typeof data === 'object') {
-            const { password, ...rest } = data;
-            return rest;
+          // اگر سند Mongoose است و دارای _doc است
+          if (data && typeof data === 'object') {
+            if (data._doc) {
+              const { password, __v, ...rest } = data._doc; // حذف password و بقیه رو نگه دار
+              return rest;
+            }
+
+            // اگر آبجکت معمولی است، پس بازگشتی بررسی کن
+            const newObj: any = {};
+            for (const key in data) {
+              newObj[key] = extractDoc(data[key]);
+            }
+            return newObj;
           }
 
-          // اگر نوع داده چیز دیگری بود (string, number, ...) همان را برگردان
           return data;
         };
 
-        return removePassword(response);
+        return extractDoc(response);
       }),
     );
   }

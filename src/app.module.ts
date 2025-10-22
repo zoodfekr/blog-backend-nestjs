@@ -13,10 +13,12 @@ import { ConfigModule } from '@nestjs/config';
 import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { TimeMiddleware } from './common/middlewares/time.middleware';
 import { UserModule } from './user/user.module';
+import { DuplicateFilter } from './common/filters/duplicate.filter';
 
 
 const extraProviders = [
   { provide: APP_FILTER, useClass: LogFilter },  //? برای مدیریت خطاها
+  { provide: APP_FILTER, useClass: DuplicateFilter },  //? برای مدیریت خطاها
   { provide: APP_INTERCEPTOR, useClass: LogInterceptor }  //? inteceptor
 ]
 

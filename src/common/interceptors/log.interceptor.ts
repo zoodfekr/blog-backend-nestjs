@@ -26,10 +26,10 @@ export class LogInterceptor implements NestInterceptor {
           });
         }
       }),
-      catchError((err) => {
-        console.error('Interceptor caught error:', err);
-        throw err; // خطا را به بالا پرتاب می‌کند
-      }),
+      // catchError((err) => {
+      //   console.error('Interceptor caught error:', err);
+      //   throw err; // خطا را به بالا پرتاب می‌کند
+      // }),
     );
   }
 }

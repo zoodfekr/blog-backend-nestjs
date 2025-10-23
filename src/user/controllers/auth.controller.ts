@@ -7,12 +7,14 @@ import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
 export class AuthController {
 
-    constructor(private readonly userService: UserService) { }
+    constructor(
+        private readonly userService: UserService
+    ) { }
 
     @Post()
     blogByid(@Body() body: signInDto) {
         return this.userService.signin(body);
     }
-    
+
 
 }

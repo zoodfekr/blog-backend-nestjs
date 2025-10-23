@@ -9,12 +9,14 @@ import { User } from '../schema/user.schema';
 import { UserQueryDto } from '../dto/user-query.dto';
 import { UserDto } from '../dto/user.dto';
 import { updateUserDto } from '../dto/user-update.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
 
     constructor(
         @InjectModel(User.name) private readonly userModel: Model<User>,
+        private readonly jweService: JwtService
     ) { }
 
 
@@ -103,9 +105,14 @@ export class UserService {
 
         console.log('ورود موفق', user.userName);
 
+        const payload = { _id: user._id }
+        const token = this.jweService.sign(payload)
+
         return {
             message: 'ورود موفق',
+            token: token,
             user: {
+                id: user._id,
                 userName: user.userName,
                 firstName: user.firstName,
                 lastName: user.lastName,

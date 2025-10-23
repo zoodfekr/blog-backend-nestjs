@@ -14,6 +14,7 @@ import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { TimeMiddleware } from './common/middlewares/time.middleware';
 import { UserModule } from './user/user.module';
 import { DuplicateFilter } from './common/filters/duplicate.filter';
+import { JwtModule } from '@nestjs/jwt';
 
 
 const extraProviders = [
@@ -27,7 +28,10 @@ const extraProviders = [
     ConfigModule.forRoot({
       isGlobal: true, // تا در همه جا قابل دسترسی باشه
     }),
-
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      global: true
+    }),
     BlogModule,
     MongooseModule.forRoot(process.env.DB_url || ''),
     MongooseModule.forFeature([
@@ -44,6 +48,6 @@ const extraProviders = [
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-      consumer.apply(TimeMiddleware).forRoutes('*')
+    consumer.apply(TimeMiddleware).forRoutes('*')
   }
- }
+}

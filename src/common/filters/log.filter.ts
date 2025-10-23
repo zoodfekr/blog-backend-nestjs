@@ -8,20 +8,15 @@ export class LogFilter implements ExceptionFilter {
   constructor(private readonly appService: AppService) { }
 
   async catch(exception: unknown, host: ArgumentsHost) {
+
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
     // بررسی نوع خطا
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    const status = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
 
-    const message =
-      exception instanceof HttpException
-        ? exception.getResponse()
-        : { message: (exception as any)?.message || 'Internal server error' };
+    const message = exception instanceof HttpException ? exception.getResponse() : { message: (exception as any)?.message || 'Internal server error' };
 
     // ارسال پاسخ به کاربر
     response.status(status).json({
@@ -35,7 +30,7 @@ export class LogFilter implements ExceptionFilter {
     await this.appService.log({
       type: LogType.Error,
       content: JSON.stringify(message),
-      url: request.url,
+      url: request.url
     });
   }
 }

@@ -30,7 +30,7 @@ async function bootstrap() {
   // ?استفاده از guard به صورت گلوبال
   // app.useGlobalGuards(new ApiKeyGuard());
   // ? استفاده از interceptor به صورت گلوبال
-  app.useGlobalInterceptors(new LogInterceptor(app.get(AppService)))
+  // app.useGlobalInterceptors(new LogInterceptor(app.get(AppService)))
 
   app.useGlobalPipes(new IdPipe())
 
@@ -40,6 +40,7 @@ async function bootstrap() {
     .setDescription('API description')
     .setVersion('1.0')
     .addServer('http://localhost:3000')
+    .addBearerAuth()
     .build();
 
   //? .Add more Swagger configuration as needed

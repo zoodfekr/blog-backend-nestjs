@@ -1,6 +1,6 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UserDto } from '../dto/user.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UserQueryDto } from '../dto/user-query.dto';
 import { FarsiPipe } from 'src/common/pipes/farsi.pipe';
 import { MobilePipe } from 'src/common/pipes/mobile.pipe';
@@ -8,9 +8,13 @@ import { PasswordPipe } from 'src/common/pipes/password.pipe';
 import { PasswordInterceptor } from 'src/common/interceptors/password.interceptor';
 import { updateUserDto } from '../dto/user-update.dto';
 import { UserService } from '../services/user.service';
+import { JwtGuard } from 'src/common/guards/jwt.guard';
 
 @ApiTags('User')
 @Controller('user')
+@UseInterceptors(PasswordInterceptor)
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 export class UserController {
 
     constructor(private readonly userService: UserService) { }
@@ -27,13 +31,11 @@ export class UserController {
     }
 
     @Post()
-    @UseInterceptors(PasswordInterceptor)
     createpost(@Body(FarsiPipe, MobilePipe, PasswordPipe) body: UserDto) {
         return this.userService.create(body);
     }
 
     @Put(':id')
-    @UseInterceptors(PasswordInterceptor)
     updatepost(
         @Param('id') id: string,
         @Body(FarsiPipe, MobilePipe, PasswordPipe) body: updateUserDto

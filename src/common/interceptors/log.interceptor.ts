@@ -9,27 +9,26 @@ export class LogInterceptor implements NestInterceptor {
   constructor(private readonly appService: AppService) { }
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+
     const request = context.switchToHttp().getRequest();
 
-    console.log('📥 Request Info:', request.method, request.url);
+    console.log('📥 Request Info:', request.method, request['user']);
 
     return next.handle().pipe(
       tap((res) => {
         if (request.method !== 'GET') {
-          // لاگ async ولی بدون block کردن جریان
+
+          console.log('LogInterceptor ');
+
           from(this.appService.log({
             type: request.method,
             content: JSON.stringify(res),
             url: request.url,
-          })).subscribe({
-            error: (err) => console.error('Log Error:', err),
-          });
+            user: request['user']?._id || null,
+          }))
+            .subscribe({ error: (err) => console.error('Log Error:', err) });
         }
       }),
-      // catchError((err) => {
-      //   console.error('Interceptor caught error:', err);
-      //   throw err; // خطا را به بالا پرتاب می‌کند
-      // }),
     );
   }
 }

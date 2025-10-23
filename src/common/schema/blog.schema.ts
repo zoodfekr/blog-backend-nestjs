@@ -21,6 +21,8 @@ export class Log extends Document {
     url: string;
     @Prop()
     content: string;
+    @Prop()
+    user: string;
 
 }
 

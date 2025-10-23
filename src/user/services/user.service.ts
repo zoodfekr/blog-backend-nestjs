@@ -105,12 +105,15 @@ export class UserService {
 
         console.log('ورود موفق', user.userName);
 
-        const payload = { _id: user._id }
-        const token = this.jweService.sign(payload)
+        const userId = { _id: user._id }
+        const token = this.jweService.sign(userId)
+
+        // ! بی اعتبار کردن توکن قبلی بررسی شود
 
         return {
             message: 'ورود موفق',
-            token: token,
+            access_token: token,
+            refresh_token: '',
             user: {
                 id: user._id,
                 userName: user.userName,

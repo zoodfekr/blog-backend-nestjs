@@ -30,7 +30,7 @@ const extraProviders = [
     }),
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      global: true
+      global: true,
     }),
     BlogModule,
     MongooseModule.forRoot(process.env.DB_url || ''),

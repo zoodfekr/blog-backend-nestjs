@@ -55,8 +55,8 @@ export class CategoryService {
     }
 
     // ? ایجاد بلاگ جدید
-    async createCategory(body: CategoryDto) {
-        const newCategory = new this.categoryModel(body);
+    async createCategory(body: CategoryDto, auther: string) {
+        const newCategory = new this.categoryModel({ ...body, auther: auther || 'unknown' });
         await newCategory.save();
         return newCategory;
     }

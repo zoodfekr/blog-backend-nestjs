@@ -9,6 +9,7 @@ import { PasswordInterceptor } from 'src/common/interceptors/password.intercepto
 import { updateUserDto } from '../dto/user-update.dto';
 import { UserService } from '../services/user.service';
 import { JwtGuard } from 'src/common/guards/jwt.guard';
+import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
 
 @ApiTags('User')
 @Controller('user')

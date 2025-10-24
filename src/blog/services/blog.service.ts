@@ -60,14 +60,21 @@ export class BlogService {
     }
 
     // ? ایجاد بلاگ جدید
-    async createBlog(body: BlogDto) {
+    async createBlog(body: BlogDto, Author: string) {
+
+        console.log('blog body::', body,Author);
         // بررسی وجود category
         const categoryExists = await this.categoryModel.findById(body.category).exec();
         if (!categoryExists) throw new BadRequestException(`Category with id ${body.category} not found`);
 
-        const newBlog = new this.blogModel(body);
+        const newBlog = new this.blogModel({ ...body, Author: Author });
         await newBlog.save();
-        return newBlog;
+        
+        // اضافه کردن user به response
+        return {
+            ...newBlog.toObject(),
+            user: Author
+        };
     }
 
     // ? بروزرسانی بلاگ بر اساس آیدی

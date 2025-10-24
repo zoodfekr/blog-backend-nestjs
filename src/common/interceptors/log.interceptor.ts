@@ -12,7 +12,7 @@ export class LogInterceptor implements NestInterceptor {
 
     const request = context.switchToHttp().getRequest();
 
-    console.log('📥 Request Info:', request.method, request['user']);
+    console.log('📥 Request Info:', request.method);
 
     return next.handle().pipe(
       tap((res) => {
@@ -24,7 +24,7 @@ export class LogInterceptor implements NestInterceptor {
             type: request.method,
             content: JSON.stringify(res),
             url: request.url,
-            user: request['user']?._id || null,
+            user: request['user']?._id || 'unknown',
           }))
             .subscribe({ error: (err) => console.error('Log Error:', err) });
         }

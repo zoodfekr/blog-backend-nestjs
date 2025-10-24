@@ -1,13 +1,18 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BlogDto } from '../dto/blog.dto';
 import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dto/blog-query.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateBlogDto } from '../dto/update-blog.dto';
-// import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
+import { LogInterceptor } from 'src/common/interceptors/log.interceptor';
+import { User } from 'src/common/decorators/user.decorator';
+import { JwtGuard } from 'src/common/guards/jwt.guard';
 
 @ApiTags('blogs')
 @Controller('blogs')
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
+// @UseInterceptors(LogInterceptor)
 export class BlogController {
 
 
@@ -25,8 +30,12 @@ export class BlogController {
     }
 
     @Post()
-    createpost(@Body() body: BlogDto) {
-        return this.blogService.createBlog(body);
+    createpost(
+        @Body() body: BlogDto,
+        @User() user: string
+    ) {
+        console.log('user data - ctrl blog', user);
+        return this.blogService.createBlog(body, user);
     }
 
     @Put(':id')

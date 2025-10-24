@@ -17,10 +17,12 @@ import { DuplicateFilter } from './common/filters/duplicate.filter';
 import { JwtModule } from '@nestjs/jwt';
 
 
+
+
 const extraProviders = [
   { provide: APP_FILTER, useClass: LogFilter },  //? برای مدیریت خطاها
   { provide: APP_FILTER, useClass: DuplicateFilter },  //? برای مدیریت خطاها
-  { provide: APP_INTERCEPTOR, useClass: LogInterceptor }  //? inteceptor
+  // { provide: APP_INTERCEPTOR, useClass: LogInterceptor }  //? inteceptor
 ]
 
 @Module({
@@ -43,7 +45,11 @@ const extraProviders = [
     UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, ...extraProviders],
+  providers: [
+    AppService,
+    LogInterceptor,
+    ...extraProviders
+  ],
   exports: [AppService],
 })
 export class AppModule implements NestModule {

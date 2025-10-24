@@ -1,15 +1,19 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { BlogDto } from '../dto/blog.dto';
 import { BlogService } from '../services/blog.service';
 import { BlogQueryDto } from '../dto/blog-query.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CategoryService } from '../services/category.service';
 import { CategoryDto } from '../dto/category.dto';
 import { CategoryQueryDto } from '../dto/category-query.dto';
 import { UpdateCategoryDto } from '../dto/update-category.dto';
+import { JwtGuard } from 'src/common/guards/jwt.guard';
+import { User } from 'src/common/decorators/user.decorator';
 
 @ApiTags('Blog Category')
 @Controller('categorys')
+@UseGuards(JwtGuard)
+@ApiBearerAuth()
 export class CategoryController {
 
 
@@ -27,8 +31,11 @@ export class CategoryController {
     }
 
     @Post()
-    createcategory(@Body() body: CategoryDto) {
-        return this.categoryService.createCategory(body);
+    createcategory(
+        @Body() body: CategoryDto,
+        @User() user: string
+    ) {
+        return this.categoryService.createCategory(body, user);
     }
 
     @Put(':id')

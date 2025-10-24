@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import { ApiKeyGuard } from './common/guards/api_key.guard';
-import { LogInterceptor } from './common/interceptors/log.interceptor';
 import { AppService } from './app.service';
 import { IdPipe } from './common/pipes/id.pipe';
 

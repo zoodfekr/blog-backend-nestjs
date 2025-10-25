@@ -13,6 +13,7 @@ export class JwtGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
 
     const request = context.switchToHttp().getRequest<Request>();
+    const response = context.switchToHttp().getRequest<Response>();
 
     try {
 
@@ -30,7 +31,12 @@ export class JwtGuard implements CanActivate {
       return true;
 
     } catch (error) {
-      throw new UnauthorizedException('Invalid or expired token');
+      // throw new UnauthorizedException('لطفا توکن را وارد نماید');
+      response.status(401).json({
+        success: false,
+        message: error.message || 'توکن نامعتبر است',
+      });
+      return false; // مانع ادامه‌ی اجرا
     }
 
   }

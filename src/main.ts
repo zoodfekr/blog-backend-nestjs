@@ -7,6 +7,7 @@ import { join } from 'path';
 import { ApiKeyGuard } from './common/guards/api_key.guard';
 import { AppService } from './app.service';
 import { IdPipe } from './common/pipes/id.pipe';
+import { LogFilter } from './common/filters/log.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -25,6 +26,8 @@ async function bootstrap() {
 
   //? Serve static files from files directory
   app.useStaticAssets(join(__dirname, '..', 'files'), { prefix: '/files/' });
+
+  app.useGlobalFilters(new LogFilter(app.get(AppService)))
 
   // ?استفاده از guard به صورت گلوبال
   // app.useGlobalGuards(new ApiKeyGuard());

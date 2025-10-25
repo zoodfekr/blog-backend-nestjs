@@ -15,17 +15,7 @@ import { TimeMiddleware } from './common/middlewares/time.middleware';
 import { UserModule } from './user/user.module';
 import { DuplicateFilter } from './common/filters/duplicate.filter';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtFilter } from './common/filters/jwt.filter';
 
-
-
-
-const extraProviders = [
-  { provide: APP_FILTER, useClass: LogFilter },  //? برای مدیریت خطاها
-  { provide: APP_FILTER, useClass: JwtFilter },  //? برای مدیریت خطاها
-  { provide: APP_FILTER, useClass: DuplicateFilter },  //? برای مدیریت خطاها
-  // { provide: APP_INTERCEPTOR, useClass: LogInterceptor }  //? inteceptor
-]
 
 @Module({
   imports: [
@@ -50,7 +40,8 @@ const extraProviders = [
   providers: [
     AppService,
     LogInterceptor,
-    ...extraProviders
+    // { provide: APP_FILTER, useClass: LogFilter },  //? برای مدیریت خطاها
+    { provide: APP_FILTER, useClass: DuplicateFilter },  //? برای مدیریت خطاها
   ],
   exports: [AppService],
 })

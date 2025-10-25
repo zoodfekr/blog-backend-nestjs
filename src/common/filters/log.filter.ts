@@ -21,9 +21,8 @@ export class LogFilter implements ExceptionFilter {
     // ارسال پاسخ به کاربر
     response.status(status).json({
       statusCode: status,
-      timestamp: new Date().toISOString(),
       path: request.url,
-      message,
+      error: message,
     });
 
     // ذخیره لاگ

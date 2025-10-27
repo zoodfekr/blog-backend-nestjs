@@ -4,10 +4,7 @@ import { ArgumentMetadata, BadRequestException, FileTypeValidator, Injectable, M
 export class ImagePipe implements PipeTransform {
   transform(value: any, metadata: ArgumentMetadata) {
 
-
-    if (!value || !Array.isArray(value)) {
-      throw new BadRequestException('No files uploaded');
-    }
+    if (!value || !Array.isArray(value)) throw new BadRequestException('No files uploaded');
 
     const sizeValidator = new MaxFileSizeValidator({ maxSize: 20000000 });
     const typeValidator = new FileTypeValidator({ fileType: /(image\/jpeg|image\/png|image\/jpg|image\/webp)/ });

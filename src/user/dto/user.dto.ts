@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsMongoId } from 'class-validator';
+import { IsNotEmpty, IsString, IsMongoId, IsOptional } from 'class-validator';
 
 export class UserDto {
 
@@ -21,4 +21,8 @@ export class UserDto {
     @IsString()
     @IsNotEmpty()
     password: string;
+
+    @IsString()
+    @IsNotEmpty()
+    email: string;
 }
